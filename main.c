@@ -1,9 +1,4 @@
-#include <stdio.h>
-
-int main(void) {
-    printf("Hello, World!\n");
-    return 0;
-}
+//C语言第一天25/10/15
 /**
  * 一、C语言程序基本格式
  * 针对于以下基本结构：
@@ -75,50 +70,117 @@ int main(void) {
  * 五、变量的创建和使用（引入代码）
  * 1.基本格式：数据类型 变量 = （数字常量/变量名称/算式）
  * 例如：
+ * (1)数字常量：（在此解决了clion系统的输出中文时乱码的问题）
+ *#include <stdio.h>
+
+int main(void) {
+    int a = 10;
+    printf("a的值：%d",a);
+    return 0;
+}
+ * (2)同时创建多个变量（%d代表输出整数）
+ *#include <stdio.h>
+
+int main(void) {
+    int a = 10;
+    int b = 20;
+    printf("%d %d",a,b);
+    return 0;
+}
+ * (3)算式：
+ *  ①单独创建一个新变量
  * #include <stdio.h>
 
 int main(void) {
-    printf("Hello, World!\n");
+    int a = 10;
+    int b = 20 , c = a+b;
+    printf("a+b = %d",c);
+    return 0;
+}
+ *  ②也可以直接在printf中写算式
+ *#include <stdio.h>
+
+int main(void) {
+    int a = 10;
+    int b = 20;
+    printf("%d",a+b);
     return 0;
 }
  *
+ *2.变量的命名注意事项
+ * （1）只能包含英文，下划线
+ * （2）可包含数字，但不能数字开头
+ * （3）尽量使用英文而不是拼音（驼峰命名法 大小写）
+ *
+ *3.练习
+ * （1）变量类型为小数：
+ *   ①%lf %f均为输出小数
+ *   #include <stdio.h>
+
+int main(void) {
+    double a = 10.13;
+    float b = 20.26;
+    printf("%lf %f",a,b);
+    return 0;
+}
+ *   ②保留几位小数
+ *   #include <stdio.h>
+
+int main(void) {
+    double a = 10.13;
+    float b = 20.26;
+    printf("%.2lf %.1f",a,b);
+    return 0;
+}
+ * （2）变量类型为字符（范围：-128~127）
+ *    ①输出字符，加单引号(%d输出该字符在ASC码中对应的值)
+ *    #include <stdio.h>
+
+int main(void) {
+    char a = 'A';
+    printf("%d",a);
+    return 0;
+}
+ *   ②%c直接输出该字符
+ *   #include <stdio.h>
+
+int main(void) {
+    char a = 'A';
+    printf("%c",a);
+    return 0;
+}
+ *   ③也可ASC码转字符
+ *   #include <stdio.h>
+
+int main(void) {
+    char a = 65;
+    printf("%c",a+1);
+    return 0;
+}
+ *   ④溢出范围会输出-128（补码）：
+ *
+ *
+ *4.一个小tips:
+ * 使用const int/char/double可以固定一个值
  */
 
+/**
+ * 六、无符号数：首位不再视为符号
+ * 例如：在数据类型前加入unsigned
+ * 1.a只能是负数，正数符号位为0，值不变；
+ * #include <stdio.h>
 
+int main(void) {
+    unsigned char a = -65;//（-65的补码10111111。没有符号位，一切为正）
+    printf("%u",a);
+    return 0;
+}
+ * 2.%u是无符号输出十进制数，可单独使用（只输出32bit位最大值）
+ * #include <stdio.h>
 
-
-
-
-
-
-        变量：
-
-变量的命名：
-
-两个变量命名的两种方式
-        注：①只能包含英文，下划线
-②可包含数字，但不能数字开头
-③尽量使用英文而不是拼音（驼峰命名法 大小写）
-printf打印结果
-        print意为打印 f是格式化
-        printf（“c的结果是：％d”，c）；//％d是整数
-那abc都输出呢
-％lf小数模式  ％.1lf
-字符输出，单引号
-char=对应的asc码（不用写单引号）
-
-转译字符：
-char ＼n（橙色即正确）或asc码10
-％c（字符）＼＼表示一个斜杠
-
-        不设定初始值时结果不一定，随机
-        位数不够 运算结果溢出 如字符127（max）+1=128（-128）
-
-const int（固定一个值 下面再有值也只会取这个值）
-
-
-无符号数：
-unsigned char（首位也用于 8个bit）
-％u（无符号输出）
--65无符号输出的191（-65的补码10111111。没有符号位，一切为正）
-int i的无符号输出为？
+int main(void) {
+    int a = -65;
+    printf("%u",a);
+    return 0;
+}
+ */
