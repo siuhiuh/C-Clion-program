@@ -25,6 +25,11 @@
   <component name="ChangeListManager">
     <list default="true" id="c1de8794-8e8d-48bf-b4ff-58eedf406131" name="更改" comment="C语言第一天（25/10/15）">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/program.dir/main.c.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/program.dir/main.c.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/program.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/program.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,7 +109,10 @@
       <workItem from="1760368234049" duration="1200000" />
       <workItem from="1760417031545" duration="63000" />
       <workItem from="1760439958842" duration="6511000" />
-      <workItem from="1760527451521" duration="1000" />
+      <workItem from="1760527451521" duration="2188000" />
+      <workItem from="1760530877555" duration="623000" />
+      <workItem from="1760600006918" duration="4665000" />
+      <workItem from="1760618569275" duration="3958000" />
     </task>
     <task id="LOCAL-00001" summary="C语言第一天（25/10/15）">
       <option name="closed" value="true" />
@@ -114,7 +122,15 @@
       <option name="project" value="LOCAL" />
       <updated>1760527013226</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="C语言第一天（25/10/15）">
+      <option name="closed" value="true" />
+      <created>1760527542667</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1760527542668</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
