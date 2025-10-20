@@ -1,269 +1,248 @@
-//C语言第三天（25/10/17）
+//C语言第四天（25/10/20）
 /**
- * 一、if判断语句：
-1.if语句基本结构（花括号内属于if）
-int i =0；
-if （i＞10）{执行的代码}//不要花括号就识别最近的那一行（无法识别多行）
-
-2.引入不满足else
-
-3.连续判断else if
-#include <stdio.h>
+* 一、循环小案例：
+1、正向反向输出：
+(1)1到5进行输出：开始条件；结束条件；重复执行的事；每次循环后 i如何改变。
+ #include <stdio.h>
 
 int main(void) {
-    int score = 85;
-    if(score > 90){
-        printf("perfect");
-    } else if (score >= 70){
-        printf("good");
-    } else{
-        printf("omg");
-    }
+for(int i =1; i<=5 ; i++)
+{
+printf("%d\n",i);
 }
-4.if嵌套语句（注意花括号的范围一一对应）
-int main(void) {
-    int score = 29;
-    if(score<60) {//大于60就不必进入这个条件语句了
-        if (score > 30) {
-            printf("Study C++");
-        }else{
-            printf("study Py");
-        }
-    }
 }
- */
 
-/**
-* 二、分支语句-Switch：更适用于多个分支的语句
- * 1.基本格式：
- * switch（目标）{
- * case 匹配值：
- * 代码
- * break；
- * }
- *2.
- * #include <stdio.h>
+(2)5到1反向输出：
+ #include <stdio.h>
 
 int main(void) {
-    char c = 'A';
-    switch(c){
-        case 'A':
-            printf("yes");
-            break;//每一段都要加break，否则会连续输出下面的值，不会停止
-        case 'B':
-            printf("no");
-            break;
-    }
-    return 0;
+for(int i =5 ; i>=1 ; i--)
+{
+printf("%d\n",i);
 }
- *3.switch的劣势：可以精确判断某个值，但不能进行范围判断
- *4.如果不满足的情况下：用defualt
- * #include <stdio.h>
+}
+
+2.求和（累加，循环外定义一个初始变量）：
+先获取每个数，设一个变量0
+ #include <stdio.h>
 
 int main(void) {
-    char c = 'D';
-    switch(c){
-        case 'A':
-            printf("yes");
-            break;//每一段都要加break，否则会连续输出下面的值，不会停止
-        case 'B':
-            printf("no");
-            break;
-        default://后面不用加break了
-            printf("0");
-    }
-    return 0;
+int sum = 0;//定义用来累加的变量
+for(int i = 1; i<=5 ;i++)
+{
+sum += i;
 }
- *5.在switch中嵌套if(实则有点多余)
- *#include <stdio.h>
+printf("%d", sum);//只取结果的做法
+}
+
+
+二、深入：变量的生命周期（变量只在所属大括号内有效）
+1、属于if的大括号中：
+ #include <stdio.h>
 
 int main(void) {
-    char c = 'A';
-    switch(c){
-        case 'A':
-            if(c == 'A'){
-                printf("omg");
-            }
-            break;
-        case 'B':
-            printf("no");
-            break;
-        default:
-            printf("0");
-    }
-    return 0;
+if(1)
+{
+int a= 10;
 }
- *
+printf("%d",a);//出大括号后变量a的值消失
+}
+
+
+2、属于main的大括号：均存在
+
+3、练习：
+ #include <stdio.h>
+
+int main(void) {
+if(1)
+{
+int a= 10;
+printf("%d",a);
+}
+int a= 15;
+printf("%d",a);//大括号后a变为一个新的变量
+}
+
+
+4、一些疑惑解答（出括号变量从程序中消失）：
+ #include <stdio.h>
+
+int main(void) {
+for(int i =1 ;i<=5 ; i++)
+{
+int sum =0;
+sum +=i;
+printf("%d",sum);
+ }//每次都全新变量，因此累加变量设在最外面
+}
+
+
+
+三、符合条件的求和：0到100的偶数和
+ #include <stdio.h>
+
+int main(void) {
+int  sum=0;
+for(int i =0;i<=100; i++)//取出1到100的数
+{
+if(i%2 == 0)//判断是否为偶数（想到多少写多少），双等号才是判断等于，单等号是赋值
+{
+sum +=i;
+}
+}
+printf("%d",sum);
+}
+
+
+四、统计满足条件的数字的个数：键盘录入两个数字表示范围，统计范围中既能被6整除，又能被8整除的数字有多少个：（scanf）
+//忽略了用scanf录入的步骤
+ #include <stdio.h>
+
+int main(void) {
+int num1;
+int num2;
+printf("请输入两个数字：\n");
+scanf("%d %d",&num1,&num2)//别忘记取地址符&
+//判断num1和2的大小（否则出错）
+int min = num1 < num2 ? num1 : num2;
+int max = num1 > num2 ? num1 : num2;
+int count = 0；
+for(i=min; i<=max ;i++)//改成min和max
+{
+if(i %6==0 && i %8==0 )//ok，同时满足就是这样写
+{
+count +=1;//或count++
+}
+}
+printf("%d",count);
+}
+
+思维：写完后输入一些特殊的数据，修复bug.代码不可能一次性写完整
+
+五、while循环：
+1、基本结构：
+初始化语句
+while（条件判断语句）
+{
+循环体语句
+条件控制语句
+}
+
+2、while的简单运用：
+ #include <stdio.h>
+
+int main(void) {
+int i = 1;
+while(i <= 4)
+{
+printf("超级嵌入式开发工程师就是我！");//循环语句
+i++;//条件控制语句
+}
+}
+
+
+六、for和while的对比：
+1、唯一的小区别：for中的控制循环的变量i，在for结束后无法被调出（i在for中定义）
+但while1中的循环变量，循环结束后仍可继续使用
+2、真正的区别（适用范围）：（for）知道循环次数或范围。（while）只知道结束条件，不知道循环次数和范围
+3、举例：
+（1）求和1到100（明确的范围）：for
+（2）读取文件中的内容（用的是循环，一次读取一个字）：while一直读到末尾
+
+七、循环算法题练习：
+1、***一个整数n，判断她是否时二的幂次方：
+ #include <stdio.h>
+
+int main(void) {
+int n;
+ptintf("请输入一个整数：")
+scanf("%d",&n);
+//循环用while：满足条件，循环才进行，则与结束条件反过来
+//结束条件：（1）结果是1时结束，（整除余1），yes（2）结果无法被2整除，no
+while(i>1 && i %2 ==0);//不知道除多少次，只知道结束条件，用while
+{
+n = n/2;
+}
+if(n == 1)
+{
+printf("yes");
+}
+else
+{
+printf("no");
+}
+}
+
+2、折叠纸张，多少次能达到珠穆朗玛峰高度
+ #include <stdio.h>
+
+int main(void) {
+//（1）定义纸的的厚度和珠穆朗玛峰高度
+double a = 0.1;
+int h = 8844430;
+int count =0;
+//(2)循环结束条件，累次乘以2，最终达到珠穆朗玛峰高度
+while(a <=8844430)
+{
+a *=2;
+count++;
+}
+printf("%d",count);
+}
+
+3、***将一个整数进行反转：思路，把每个数取出来，再拼接
+ #include <stdio.h>
+
+int main(void) {
+int a= 123;
+int res = 0;//反转结果
+//从右依次取出每位数
+while(a != 0)//只要这个数不为0
+{
+int c = a % 10;
+a /=10;//除去一位
+res =  res*10 + c;//组合起来
+}
+printf("%d",res);
+}
+
+4、***一个非负整数x，计算并返回x的算数平方根。保留只保留整数部分被舍去。
+ #include <stdio.h>
+
+int main(void) {
+//重点思路：从1*1开始逐渐增大，直到平方大于x的值（有了这个思路就能自己写了）
+int x = 8;
+int i = 1；
+while(i*i <= x )//一定要等于这个数字吗，不等于的话循环i++不会执行
+{
+i++;
+}
+printf("%d",i－1);
+}
+
+5、判断一个整数是否为回文数：从左从右读都是同一个数字121
+ #include <stdio.h>
+
+int main(void) {
+int number = 12321;
+int org = number;
+int res = 0;
+while(number !=0)
+{
+int c =number %10;
+res = res*10 + c;
+number /= 10;
+}
+if(res == org)
+{
+printf("yes");
+}
+else
+{
+printf("no");
+}
+
+}//此处有个很大的问题，1、首先是把else 和else if搞混了（else if要判断条件才可使用）
+ //2、双等号才是等于，一开始只用了单等号，导致直接强行让两者相等了，只输出yes。No变灰。
 */
-
-/**
-* 三、循环语句——for：批量执行代码
- * 1.格式：
- * for(表达式1；表达式2；表达式3){
- * 循环体
- * }
- * 2.相关解释：
- * ①表达式1只会执行一次（赋值）
- * ②表达式2每次循环前都会判断一次（if语句），若不再满足条件，则停止
- * ③表达式3在每次结束后进行一次
- * 3.例子：
- *#include <stdio.h>
-
-int main(void) {
-    for (int i = 0; i<4;i++){
-        printf("omg\n");//每次都忘记打；
-    }//结束循环后后面有代码的话也是可以继续执行的
-    return 0;
-}
- *4.调试在循环中的使用（小虫虫）：
- * 标红点击小虫虫可进行调试（恢复程序）
- *#include <stdio.h>
-
-int main(void) {
-    for (int i = 0; i<4;i++){
-        printf("%d\n",i);
-    }//结束循环后后面有代码的话也是可以继续执行的
-    return 0;
-}
- *5.提前结束语break：
- *#include <stdio.h>
-
-int main(void) {
-    for (int i = 0; i<10;i++){
-        if(i == 5)break;
-        printf("%d\n",i);
-    }//结束循环后后面有代码的话也是可以继续执行的
-    return 0;
-}
- *6.加速循环continue：直接开启下一轮，具有就近原则，只加速离自己最近的for循环
- *#include <stdio.h>
-
-int main(void) {
-    for (int i = 0; i<8;i++){
-        if(i == 5) continue;//结束等于五的这一轮
-        printf("%d\n",i);
-    }
-}
- *7.多变量循环（内部优先循环完）
- * ①continue情况：
- *#include <stdio.h>
-
-int main(void) {
-    for (int i = 1; i<4;++i ){
-        for (int j = 1; j<4; ++j ) {//for后面没有冒号
-            if(i == j) continue;//相等的情况不打印
-            printf("%d %d\n",i,j);
-        }
-    }
-}
- *②break情况：
- *#include <stdio.h>
-
-int main(void) {
-    for (int i = 1; i<4;++i ){
-        for (int j = 1; j<4; ++j ) {
-            if(i == j) break;//break触发时直接退出内部循环，从外部循环从头开始
-            printf("%d %d\n",i,j);
-        }
-    }
-}
- *
- *
-*/
-
-/**
-* 四、while循环语句：只需填写循环条件即可
- * 1.while不明确结束的时机（for用于知道要循环多少次）：
- *#include <stdio.h>
-
-int main(void) {
-   int i = 100;
-   while(i>30){
-       printf("%d ",i);
-       i /= 2;
-   }
-}
- *2.while与if的嵌套
- *#include <stdio.h>
-
-int main(void) {
-   int i = 100;
-   while(i>0){
-       if(i <10)break;
-       printf("%d ",i);
-       i /= 2;
-   }
-}
- *3.do-while语句：先执行后判断的循环
- *#include <stdio.h>
-
-int main(void) {
-   do{
-       printf("OK");
-   }while(0);
-}
- *4.练习：数字的幂：
- *#include <stdio.h>
-
-int main(void) {
-    int i =10, res=1;
-    for(int j=0 ;j<4;j++){//for的各表达式要用冒号隔开
-        res *= i;
-    }
-    printf("%d",res);
-}
- *
- *
-*/
-
-/**
-* 五、实战:100内寻找水仙花数(ok 自己写不出来。。)
- *①
- * #include <stdio.h>
-
-int main(void) {
-    for (int i=0; i<200 ; ++i){
-        int a = i % 10 , b = i / 10 % 10 , c= i/100;//难点在于如何把每一位的数取出来
-        if(a*a*a+ b*b*b + c*c*c == i){
-            printf("%d是水仙花数\n",i);
-        }
-    }
-}
- *
- *
-*/
-
-/**
-* 六、实战：九九乘法表
- *#include <stdio.h>
-
-int main(void) {
-    for(int i=1 ; i<10 ; i++){
-        for(int j=1 ; j<10 ; j++){
-            if(i < j)break;//为了格式标准化，提前终止程序
-            int res = i*j;
-            printf(" %d ✖ %d = %2d",i,j,res);//只有一位数时强行占两位数
-        }
-        printf(" \n");
-    }
-}
- *
-*/
-
-/*
- * 七、斐波那契数列：（黄金分割）
- *#include <stdio.h>
-
-int main(void) {
-    int target = 5 , result;
-    int a=1 , b=1 ,c;
-    for(int i =2; i<target; ++i){
-        c = a+b;
-        a=b;
-        b=c;
-    }
-    result = c;
-    printf("%d",result);
-}
- *
- */
