@@ -1,248 +1,260 @@
-//C语言第四天（25/10/20）
+//学习C语言第五天（25/10/21）
 /**
-* 一、循环小案例：
-1、正向反向输出：
-(1)1到5进行输出：开始条件；结束条件；重复执行的事；每次循环后 i如何改变。
- #include <stdio.h>
+* 一、***练习：有两个整数相除，要求不用乘法和除法来计算得到商和余数
+//思路：计算机以加法和减法来运算
+//如2*3=2+2+2
+//11/3=11－3=8－3=5－3=2（此时商就是除以的次数，余数就是最终减到不能再减的结果：已知结束条件用while）
+#include <stdio.h>
 
 int main(void) {
-for(int i =1; i<=5 ; i++)
-{
-printf("%d\n",i);
+    int a = 10;
+    int b =3;
+    //int res=a;
+    int count=0;//count一定要赋予初始值，否则数字随机，虽然++，但是要从哪里++呢？
+    while(a >b)
+    {
+        a = a - b;
+        count++;
+       // a -= b;
+    }
+    printf("商为：%d\n",count);
+    printf("余数为：%d\n",a);
 }
-}
-
-(2)5到1反向输出：
- #include <stdio.h>
-
-int main(void) {
-for(int i =5 ; i>=1 ; i--)
-{
-printf("%d\n",i);
-}
-}
-
-2.求和（累加，循环外定义一个初始变量）：
-先获取每个数，设一个变量0
- #include <stdio.h>
-
-int main(void) {
-int sum = 0;//定义用来累加的变量
-for(int i = 1; i<=5 ;i++)
-{
-sum += i;
-}
-printf("%d", sum);//只取结果的做法
-}
-
-
-二、深入：变量的生命周期（变量只在所属大括号内有效）
-1、属于if的大括号中：
- #include <stdio.h>
-
-int main(void) {
-if(1)
-{
-int a= 10;
-}
-printf("%d",a);//出大括号后变量a的值消失
-}
-
-
-2、属于main的大括号：均存在
-
-3、练习：
- #include <stdio.h>
-
-int main(void) {
-if(1)
-{
-int a= 10;
-printf("%d",a);
-}
-int a= 15;
-printf("%d",a);//大括号后a变为一个新的变量
-}
-
-
-4、一些疑惑解答（出括号变量从程序中消失）：
- #include <stdio.h>
-
-int main(void) {
-for(int i =1 ;i<=5 ; i++)
-{
-int sum =0;
-sum +=i;
-printf("%d",sum);
- }//每次都全新变量，因此累加变量设在最外面
-}
-
-
-
-三、符合条件的求和：0到100的偶数和
- #include <stdio.h>
-
-int main(void) {
-int  sum=0;
-for(int i =0;i<=100; i++)//取出1到100的数
-{
-if(i%2 == 0)//判断是否为偶数（想到多少写多少），双等号才是判断等于，单等号是赋值
-{
-sum +=i;
-}
-}
-printf("%d",sum);
-}
-
-
-四、统计满足条件的数字的个数：键盘录入两个数字表示范围，统计范围中既能被6整除，又能被8整除的数字有多少个：（scanf）
-//忽略了用scanf录入的步骤
- #include <stdio.h>
-
-int main(void) {
-int num1;
-int num2;
-printf("请输入两个数字：\n");
-scanf("%d %d",&num1,&num2)//别忘记取地址符&
-//判断num1和2的大小（否则出错）
-int min = num1 < num2 ? num1 : num2;
-int max = num1 > num2 ? num1 : num2;
-int count = 0；
-for(i=min; i<=max ;i++)//改成min和max
-{
-if(i %6==0 && i %8==0 )//ok，同时满足就是这样写
-{
-count +=1;//或count++
-}
-}
-printf("%d",count);
-}
-
-思维：写完后输入一些特殊的数据，修复bug.代码不可能一次性写完整
-
-五、while循环：
-1、基本结构：
+二、do while只用了解理论
+1、循环执行流程：
 初始化语句
-while（条件判断语句）
+do
 {
-循环体语句
-条件控制语句
-}
-
-2、while的简单运用：
- #include <stdio.h>
+循环体语句；
+条件控制语句；
+}while（条件判断语句）；//特征：循环体至少执行一次，先执行后判断
+2、练习：打印1－5
+#include <stdio.h>
 
 int main(void) {
-int i = 1;
-while(i <= 4)
+    int i=1;
+    do
+    {
+        printf("%d\n",i);
+        i++;
+    }
+    while(i<=5);//这里的while后面有分号
+    //实际开发中这个循环几乎不用
+}
+
+三、循环语句高级之无限循环
+1、for格式无限循环：
+for( ; ; )
 {
-printf("超级嵌入式开发工程师就是我！");//循环语句
-i++;//条件控制语句
+print("内容\n")
 }
-}
+2、while和do while
+while（1）（最常用）
+3、练习：Ctrl+c中止循环
+4、注：无限循环下写代码是没有意义的，循环不结束循环不到
+5、无限循环不会单独使用而是和其他的一起运用（如判断语句）
 
-
-六、for和while的对比：
-1、唯一的小区别：for中的控制循环的变量i，在for结束后无法被调出（i在for中定义）
-但while1中的循环变量，循环结束后仍可继续使用
-2、真正的区别（适用范围）：（for）知道循环次数或范围。（while）只知道结束条件，不知道循环次数和范围
-3、举例：
-（1）求和1到100（明确的范围）：for
-（2）读取文件中的内容（用的是循环，一次读取一个字）：while一直读到末尾
-
-七、循环算法题练习：
-1、***一个整数n，判断她是否时二的幂次方：
- #include <stdio.h>
+四、跳转控制语句（循环的停止）
+1、break：不可单独书写，而是放在switch或循环中表示结束，跳出
+#include <stdio.h>
 
 int main(void) {
-int n;
-ptintf("请输入一个整数：")
-scanf("%d",&n);
-//循环用while：满足条件，循环才进行，则与结束条件反过来
-//结束条件：（1）结果是1时结束，（整除余1），yes（2）结果无法被2整除，no
-while(i>1 && i %2 ==0);//不知道除多少次，只知道结束条件，用while
-{
-n = n/2;
+    for(int i=1; i<=100; i++)
+    {
+        if(i%3==0 && i%5==0)
+        {
+            printf("%d",i);
+            break;
+        }
+    }
 }
-if(n == 1)
+2、continue：结束本次循环，继续下次循环
+//一共买了五个包子，吃到第三个包子的时候发现里面有个虫子，不吃这个了，继续吃下一个
+#include <stdio.h>
+
+int main(void) {
+    for(int i =1; i<=5; i++)
+    {
+        if(i == 3)//这里误加冒号的话会让后面的无效，还有赋值==（现在会出错但是会很快的检索出来，发现错误了）
+        {
+            continue;
+        }
+        printf("在吃第%d个包子\n",i);
+    }
+}
+
+五、循环的嵌套：先确定内循环发生了什么
+1、打印一个3行5列的矩形*)思路跟我想的一样
+①
+#include <stdio.h>
+
+int main(void) {
+    for(int j =1; j<=3; j++);
+    {
+        for(int i =1; i<=5; i++)
+        {
+            printf("*");
+        }
+        printf("\n");
+    }
+}
+2、打印形状
+//五行五列倒三角：
+#include <stdio.h>
+
+int main(void) {
+    for(int j = 1; j<=5;j++)
+    {
+        for(int i =j; i<=5; i++)//修改内循环，因为它决定了要打几列
+        {
+            printf("*");
+        }
+        printf("\n");//打印出一行5列的
+    }//打印五行五列的，现每行逐次递减
+}
+
+//正三角形（在矩形的基础上进行改写）
+#include <stdio.h>
+
+int main(void) {
+    for(int j = 1; j<=5;j++)
+    {
+        for(int i =1; i<=j; i++)//修改内循环，因为它决定了要打几列
+        {
+            printf("*");
+        }
+        printf("\n");//打印出一行5列的
+    }//打印五行五列的，现每行逐次递增
+}
+
+六、九九乘法表：三角形的表
+//1、先打印9*9的九九乘法表(正三角形格式)
+#include <stdio.h>
+
+int main(void) {
+    for(int i=1 ;i<=9;i++)
+    {
+        for(int j = 1;j<=i;j++)
+        {
+            printf(" %d × %d=%d\t", j , i, i*j);//只用嵌套(j是横着的数据变化，i是竖着的数据变化)
+//\t是制表符，长度可自动变的大空格
+        }
+        printf("\n");
+    }
+}
+
+七、制表符\t:大空格，让整体的长度补全达到8或者8的倍数
+1、abc\t (补5个)  abcdefgh\t（补8个）一个中文的长度是2
+2、作用：让上下文对齐
+#include <stdio.h>
+
+int main(void) {
+    printf("name\t\tage\n");//为了对齐可重复使用多个\t
+    printf("zhangsan\t23\n");
+}
+
+八、***练习：统计质数100以内
+//质数的概念：只能被1和本身整除
+//取出数字
+
+//抽茧剥丝1、判断一个整数是否为质数（任意一个整数，看除了他本身和1之外，还有没有其他可以整除它的数，进行计数判断。没有的话就是植树）
+int n=17;
+int count;
+int countA=0;
+for(int i =2; i<=n-1; i++)
 {
-printf("yes");
+if(n % i ==0)//若判断是否能被1或者本身整除，就无法排除能被其他数字整除
+{
+count++；
+break；//太妙了！简化了程序，只要找到一个可整除它的数就停止计数
+}
+if(count==0)
+{
+printf("Yes");
 }
 else
 {
 printf("no");
 }
-}
 
-2、折叠纸张，多少次能达到珠穆朗玛峰高度
- #include <stdio.h>
-
-int main(void) {
-//（1）定义纸的的厚度和珠穆朗玛峰高度
-double a = 0.1;
-int h = 8844430;
-int count =0;
-//(2)循环结束条件，累次乘以2，最终达到珠穆朗玛峰高度
-while(a <=8844430)
-{
-a *=2;
-count++;
-}
-printf("%d",count);
-}
-
-3、***将一个整数进行反转：思路，把每个数取出来，再拼接
- #include <stdio.h>
+//完整版，范围中统计质数和计数
+#include <stdio.h>
 
 int main(void) {
-int a= 123;
-int res = 0;//反转结果
-//从右依次取出每位数
-while(a != 0)//只要这个数不为0
-{
-int c = a % 10;
-a /=10;//除去一位
-res =  res*10 + c;//组合起来
-}
-printf("%d",res);
+    int countA = 0;
+    for(int i =2; i<=100; i++)
+    {
+        int count=0;//不要忘记赋值
+        for (int j = 2; j <=i-1; j++)//修改变量名快捷键两次Ctrl+R
+        {
+            if (i % j == 0)//若判断是否能被1或者本身整除，就无法排除能被其他数字整除
+            {
+                count++;
+                break;//太妙了！简化了程序，只要找到一个可整除它的数就停止计数
+            }
+        }
+            if (count == 0)
+            {
+                countA ++;
+            }
+
+    }
+    printf("%d", countA);
 }
 
-4、***一个非负整数x，计算并返回x的算数平方根。保留只保留整数部分被舍去。
- #include <stdio.h>
+
+九、循环高级之幂级数列：1的1次方+2的2次方+到10的10次方
+//拆解：1、一个数的几次方表示（循环累乘）
+for(int i =1; i<=10; i++)
+{
+for(int j=1;j<=10;j++)
+{
+if(j>i)
+{
+break;
+}
+i *=i;
+}
+
+//2、次方的累加（运用循环）
+#include <stdio.h>
 
 int main(void) {
-//重点思路：从1*1开始逐渐增大，直到平方大于x的值（有了这个思路就能自己写了）
-int x = 8;
-int i = 1；
-while(i*i <= x )//一定要等于这个数字吗，不等于的话循环i++不会执行
-{
-i++;
-}
-printf("%d",i－1);
+    long long sum = 0;//最终结果太大，太长
+    for (int i = 1; i <= 10; i++) {
+        for (int j = 1; j <= 10; j++) {
+            if (j > i)//也可用正三角形法：即j<=i,便可以更简洁的得到想要的程序
+            {
+                break;
+            }
+            sum = sum + i * i;
+        }
+        printf("%d", sum);
+
+    }
 }
 
-5、判断一个整数是否为回文数：从左从右读都是同一个数字121
- #include <stdio.h>
+十、自主练习：
+1、0到1000内，符合要求的数字：每一位数字之和等于15：
+#include <stdio.h>
 
 int main(void) {
-int number = 12321;
-int org = number;
-int res = 0;
-while(number !=0)
-{
-int c =number %10;
-res = res*10 + c;
-number /= 10;
-}
-if(res == org)
-{
-printf("yes");
-}
-else
-{
-printf("no");
-}
+    int count=0;
+    int sum=15;
+    int res=0;
+ for(int i =1; i<=100 ;i++)
+ {
+     while(i>0)
+     {
+         res =res + i%10;
+         i /=10;
+     }
+     if(res==sum)
+     {
+         printf("%d",i);
+     }
 
-}//此处有个很大的问题，1、首先是把else 和else if搞混了（else if要判断条件才可使用）
- //2、双等号才是等于，一开始只用了单等号，导致直接强行让两者相等了，只输出yes。No变灰。
+ }
+
+}
 */
