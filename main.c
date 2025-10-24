@@ -3,7 +3,6 @@
 #include<stdlib.h>
 #include<time.h>
 
-
 int contains(int arr[], int len ,int num);
 int main(void) {
 
