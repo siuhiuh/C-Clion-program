@@ -1,53 +1,43 @@
-//C语言第八天（25/10/24）难度升级，进度放缓
+//C语言第九天（25/10/25）解决了好多问题捏
 #include <stdio.h>
 #include<stdlib.h>
 #include<time.h>
 
-
-int contains(int arr[], int len ,int num);
+void printArr(int arr[], int len);
 int main(void) {
 
-    int arr[10] = {0};
-    int len = sizeof(arr) / sizeof(int);
-    srand(time(NULL));
-    for (int i = 0; i < len;) {
-        int num = rand() % 100 + 1;
-//在把数字放入数组前进行判断是否重复，重复则不放入
-        int flag = contains(arr, len, num);
-        if (!flag)//表示flag不存在，也可以写作flag==0
-        {
-            arr[i] = num;//此时若不成立，则会跳过这一轮，数据默认值为0，范围小时仍然会重复
-            i++;//因此把i++移动到下方，满足条件才++
-
-        }
-    }
-    int sum = 0;
-    for (int i; i < len; i++) {
-        sum = sum + arr[i];
-    }
-    printf("%d\n", sum);
-//求平均数
-    int avg = sum / len;
-    printf("%d\n", avg);
-//统计有多少个数字比平均数小
-    int count = 0;
-    for (int i = 0; i < len; i++) {
-        if (arr[i] < avg) {
-            count++;
-        }
-    }
-    printf("%d\n", count);
-}//最容易错且不好修改的是这种差括号
-
-    int contains(int arr[], int len ,int num)//进行一个比较判断
+//定义数组
+    int arr[5]= {0};
+    int len = sizeof(arr) / sizeof(arr[0]);
+//键盘录入
+    for(int i = 0; i< len; i++)//找到了黄色波浪线警告，又忘记赋值了嘻嘻
     {
-        for (int i = 0; i < len; i++) {
-            if (arr[i] == num) {
-                return 1;
-            }
-        }
-        return 0;//表示不存在
+        printf("请输入第%d个数据\n", i+1);//加一避免第0个
+        scanf("%d", & arr[i]);//感觉是这里有问题
     }
+    printArr(arr , len);
+//***遍历原数组数据（这个循环反复使用，因此引入函数）
+//***翻转数组:i 和j如何同时变化呢
+    int i =0;
+    int j =len-1;//最末尾
+    while(i < j)
+    {
+        int temp = arr[i];//把i位先取出来
+        arr[i] = arr[j];
+        arr[j] = temp;//最后赋值给j
+        i++;
+        j--;
+    }
+    printArr(arr,len);
+}
+void printArr(int arr[], int len)//函数一定要写在main函数外面，否则无法调用
+{
+    for(int i= 0; i<len; i++)
+    {
+        printf("%d\n",arr[i]);
+    }
+}
+
 /**
 * 数组算法题合集
 一、***求最值：找出数组中的最大值
@@ -128,10 +118,15 @@ int main(void) {
         }
     }
     int sum = 0;
-    for (int i; i < len; i++) {
+    for (int i=0; i < len; i++)//循环是可以分开写的，同一个循环变量是可以用作一个意思的
+        //原来是i没有设置初始值0。。这样便导致循环不知道从哪里开始，循环无效
+        //因此直接输出0，若再出现类似情况，后面的i会有黄色警示线
+    {
+        printf("%d\n",arr[i]);
         sum = sum + arr[i];
     }
     printf("%d\n", sum);
+
 //求平均数
     int avg = sum / len;
     printf("%d\n", avg);
@@ -145,87 +140,113 @@ int main(void) {
     printf("%d\n", count);
 }//最容易错且不好修改的是这种差括号
 
-    int contains(int arr[], int len ,int num)//进行一个比较判断
-    {
-        for (int i = 0; i < len; i++) {
-            if (arr[i] == num) {
-                return 1;
-            }
+int contains(int arr[], int len ,int num)//进行一个比较判断
+{
+    for (int i = 0; i < len; i++) {
+        if (arr[i] == num) {
+            return 1;
         }
-        return 0;//表示不存在
     }
+    return 0;//表示不存在
+}
 
 三、反转数组：
-1、键盘录入五个数据：遍历数组；翻转数组；再次遍历
-void printfArr(int arr[], int len);
+1、***键盘录入五个数据：遍历数组；翻转数组；再次遍历
+#include <stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+void printArr(int arr[], int len);
+int main(void) {
+
 //定义数组
-int arr[5]= {0};
+    int arr[5]= {0};
+    int len = sizeof(arr) / sizeof(arr[0]);
 //键盘录入
-int len = sizeof(arr[]) / sizeof(arr[0]);
-for(int i; i<len; i++)
-{
-printf("请输入第%d个数据：",i+1)；//加一避免第0个
-scanf("%d\n",&arr[i]);
-}
-pritnfArr(arr , len);
+    for(int i = 0; i< len; i++)//找到了黄色波浪线警告，又忘记赋值了嘻嘻
+    {
+        printf("请输入第%d个数据：\n", i+1);//加一避免第0个
+        scanf ("%d", &arr[i]);//感觉是这里有问题
+    }
+    printArr(arr , len);
 //***遍历原数组数据（这个循环反复使用，因此引入函数）
 //***翻转数组:i 和j如何同时变化呢
-int i =0;
-int j =len-1;//最末尾
-while(i < j)
-{
-int temp = arr[i];//把i位先取出来
-arr[i] = arr[j];
-arr[j] = temp;//最后赋值给j
-i++;
-j--;
+    int i =0;
+    int j =len-1;//最末尾
+    while(i < j)
+    {
+        int temp = arr[i];//把i位先取出来
+        arr[i] = arr[j];
+        arr[j] = temp;//最后赋值给j
+        i++;
+        j--;
+    }
+    printArr(arr,len);
 }
-pintfArr(arr,len);
-
-void printfArr(int arr[], int len)
+void printArr(int arr[], int len)//函数一定要写在main函数外面，否则无法调用
 {
-for(int i; i<len; i++)
-{
-printf("%d\n",arr[i]);
-}
+    for(int i= 0; i<len; i++)
+    {
+        printf("%d\n",arr[i]);
+    }
 }
 
 四、***打乱数组中所有数的数据：
 //1、定义一个数组：1到5
-int arr[] = {1,2,3,4,5}；
-int len =sizeof(arr) /sizeof(int);
+#include <stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+
+int main(void) {
+
+int arr[] = {1,2,3,4,5};
+    int len =sizeof(arr) /sizeof(int);
 //取随机的索引：1到5之间
 //5 + 1
-srand(time(NULL));
-for(i = 0; i< len ; i++)
-{
-int index = rand() % len;//为啥不避免取索引重复的情况？（0到4）
+    srand(time(NULL));
+    for(int i = 0; i< len ; i++)
+    {
+        int index = rand() % len;//为啥不避免取索引重复的情况？（0到4）
 //打乱的实质是交换数据
-int temp = arr[i];
-arr[i] = arr[index];
-arr[index] = temp;
+        int temp = arr[i];
+        arr[i] = arr[index];
+        arr[index] = temp;
+    }
+    for(int i= 0; i<len; i++)
+    {
+        printf("%d\n",arr[i]);
+    }
 }
 
 五、数组的常见算法：
 1、基本查找/顺序查找:从0依次往后查找，找到后返回索引的值，没找到就返回－1
-int order(int arr[] , int len , int num);
+#include <stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+int order(int arr[], int len, int num);
+int main(void) {
+
+
 //定义数组：
-int arr[] = {11,22,98,63,54};
-int len = sizeof(arr) / sizeof(int);
-int num = 63;
-int index = order(arr,len,num);
-printf("%d\n",index);
-;
+    int arr[] = {11, 22, 98, 63, 54};
+    int len = sizeof(arr) / sizeof(int);
+    int num = 63;
+    int index = order(arr, len, num);
+    printf("%d\n", index);
 //创造一个查找函数：
-int order(int arr[] , int len , int num)
-{
-for(i = 0; i<len; i++)
-{
-if(arr[i] == num)
-{
-return i;//返回的是索引值
+
 }
-return -1;
+int order(int arr[], int len, int num)
+{
+    for (int i = 0; i < len; i++) {
+        if (arr[i] == num) {
+            return i;//返回的是索引值
+        }
+
+    }
+    return -1;//一定要写在循环外面否则只输出-1
 }
 */
 
@@ -325,5 +346,96 @@ int binarySearch(int arr[], int len, int num)//运用插值查找
  * 二分查找法先确定块，再依次遍历
  *2、不规律分块查找：
  * 此时分块更有讲究：每块数据不可有交集
+ *3、拓展的分块查找（哈希查找）
+ *
+*/
+
+/**
+* 九、常见算法（排序算法）
+ * 从小到大
+ * 1、冒泡排序：相邻数据两两比较，小的在前（左），大的在后。第一轮会把最大值放在最边边。第二轮确定次大值，进行len-1轮
+ * 2、代码实现：
+ *#include <stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+int main(void) {
+   //1、定义数组和长度：
+   int arr[] ={3,5,2,1,4};
+   int len = sizeof(arr) / sizeof(arr[0]);
+   //2、循环N次：
+   for (int i = 0 ; i < len-1 ; i++)//易忽略点 len-1是指避免索引溢出
+   {
+       for(int j = 0 ; j < len - 1 - i ; j++)//0~4 再+1 变为5溢出
+       {
+           if(arr[j] > arr[j+1])
+           {
+               int temp = arr[j];
+               arr[j] = arr[j + 1];//若两者顺序写反 则出现重复值：arr[j]被temp获取值后是空的，空的等于后面已有的数
+               arr[j + 1] = temp;
+           }
+       }
+   }
+    for (int i = 0 ; i < len ; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+
+
+}
+ *
+*/
+
+/**
+* 十、选择排序：0索引数据依次跟索引1，2，3....比较，第一轮结束后，最小值固定
+ *#include <stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+int main(void) {
+   //1、定义数组和长度：
+   int arr[] ={3,5,2,1,4};
+   int len = sizeof(arr) / sizeof(arr[0]);
+
+    //2、循环拆解版：
+     //内循环：
+     //第一轮：
+            for(int i = 1 ; i < len  ; i++)
+    {
+        if(arr[0] > arr[i])
+        {
+            int temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
+        }
+    }
+
+    for (int i = 0 ; i < len ; i++)
+    {
+        printf("%d \n", arr[i]);
+    }
+//2、循环：
+for(int i = 0 ; i  < len - 1 ; i++)//最后一轮没必要比了
+    for(int j = i+1 ; j < len  ; j++)//ctrl+r换变量
+        //j从1取起和从i+1取起结果为何不同，其他点没问题
+        //j不做改变的话永远从1开始，而非当前索引和后面的依次相比（纸质推算）
+    {
+        if(arr[i] > arr[j])
+        {
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+
+    for (int i = 0 ; i < len ; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+
+
+}
+ *
+ *
  *
 */
