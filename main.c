@@ -1,109 +1,122 @@
-//C语言第13天（25/10/31）
+//C语言第14天（25/11/04）
 #include <stdio.h>
 
 int main(void) {
-
-        // 用方式一定义
-        int arr[2][3] = {
-                [0] = {[0] = 1, [1] = 2, [2] = 3},
-                [1] = {[0] = 11, [1] = 22, [2] = 33}
-        };
-
-        // 遍历数组
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                printf("%d ", arr[i][j]);
-            }
-            printf("\n");
+///定义一个数组：
+    int arr1[3] = {1 , 2 , 3} ;
+    int arr2[3] = {1 , 2 , 6} ;
+//定义二维数组
+    int* arr[2] = {arr1 , arr2} ;
+//获取指针（重点）
+    int** p = arr ;
+//循环嵌套
+    for(int i = 0 ; i < 2 ; i++)
+    {
+        for(int j = 0 ; j < 3 ; j++)
+        {
+            printf("%d " , *(*p + j)) ;
         }
-
-        return 0;
-
+        printf("\n") ;
+        p++ ;
+    }
 }
+
 
 /**
-* 一、数组指针的细节
- * 1、arr参与计算的时候 会退化为第一个元素的首地址（指针的内存）
- * 2、但有特殊情况
- *#include <stdio.h>
+* 一、利用指针遍历第一种格式的二维数组
+1、定义格式
+数据类型* 指针名 = arr ；
+二维时：int[5]* p = arr ;
+格式优化：int(* p) [5] = arr ;
+2、代码
+#include <stdio.h>
 
 int main(void) {
-    //定义一个数组
-    int arr[] = {1, 3 , 5, 7 , 9} ;
-    //当arr计算长度时是一个整体
-    int len = sizeof(arr) / sizeof(int) ;
-    printf("%d\n" , len) ;
-    //当arr单独出现时是一个整体
-    printf("%zu\n" , sizeof(arr)) ;
-    //&arr获取地址时，不会退化，即使是在运算中
-    printf("%p\n" , arr) ;
-    printf("%p\n" , &arr) ;//两者都是首地址
-    printf("%p\n" , arr + 1) ; //一步跳跃对应的数据类型
-    printf("%p\n" , &arr + 1) ;//一步跳跃整体
-//学会用电脑calc计算十六进制跳跃了几步
+//定义一个二维数组
+    int arr[2][4] =
+            {
+                    {1,  2,  3,  4},
+                    {11, 22, 33, 44}
+            };
+//定义指针
+    int (*p)[4] = arr;//不用取地址符？
+//验证二维数组的步长（数据类型字符长度*一维中的数据个数）
+    printf("%p\n", p);
+    printf("%p\n", p + 1);
+//遍历数组
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 4; j++) {
+            printf("%d ", *(*p + j)); //*p是一维数组首地址
+        }
+        printf("\n");
+        p++;//二维指针移动（遍历下一个一维数组）
+    }
 }
+
+二、用指针遍历第二种二维数组格式
+1、定义格式
+第二种定义格式的二维数组里面放的是内存地址：
+int** p = arr ;
+2、代码运行
+#include <stdio.h>
+
+int main(void) {
+///定义一个数组：
+    int arr1[3] = {1 , 2 , 3} ;
+    int arr2[3] = {1 , 2 , 6} ;
+//定义二维数组
+    int* arr[2] = {arr1 , arr2} ;
+//获取指针（重点）
+    int** p = arr ;
+//循环嵌套
+    for(int i = 0 ; i < 2 ; i++)
+    {
+        for(int j = 0 ; j < 3 ; j++)
+        {
+            printf("%d " , *(*p + j)) ;
+        }
+        printf("\n") ;
+        p++ ;
+    }
+}
+
+三、数组指针和指针数组
+1、数组指针：指向数组的指针
+比如int* p = arr ;//步长为int 4
+int (*p)[5] = &arr ;//难道面对数组地址符是可写可不写吗，这是二维数组指针
+//类型是一维数组
+2、指针数组：存放指针的数组
+int *p[5] //存放int类型的指针
+int* arr[2] = {arr1 , arr2} ;
+
 */
 
 /**
-* 二、用&arr遍历多维数组
- * 1、什么是二维数组：小数组放在大数组中
- * //方式1
- * arr[m][n] =
- * {
- * {1,2,3,4},
- * {5,6,7,8},
- * };
- * //方式2
- * int arr1[4] = {1,2,3,4};
- * int arr2[4] = {1,2,3,4};
- * int* arr[2] = {arr1 , arr2} ;
- *
+* 四、函数指针
  *
  *#include <stdio.h>
 
+void method1() ;
+int method2(int num1 , int num2) ;
 int main(void) {
+//难点在于函数指针定义格式
+//复制函数注释
+    void (* p1)() = method1 ;
+    int (* p2)(int , int) = method2 ;//只需要写出形参的类型
 
-        // 用方式一定义
-        int arr[2][3] = {
-                [0] = {[0] = 1, [1] = 2, [2] = 3},
-                [1] = {[0] = 11, [1] = 22, [2] = 33}
-        };
-
-        // 遍历数组
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                printf("%d ", arr[i][j]);
-            }
-            printf("\n");
-        }
-
-        return 0;
-
+    //调用函数
+    p1() ;
+    int num = p2(12 , 120) ;//return的是一个数值，因此要用一个新的变量来接收
+    printf("%d" , num) ;
 }
-*/
+void method1()
+{
+    printf("method1\n") ;
+}
+int method2(int num1 , int num2)
 
-/**
- * 三、长度不同时通过索引遍历
-* #include <stdio.h>
-
-int main(void) {
-  //当长度不一样时，使用方法二
-  int arr1[3] = {1 , 2, 3} ;
-  int arr2[4] = {1 , 2, 3 , 4} ;
-  int len1 = sizeof(arr1) / sizeof(int) ;
-  int len2 = sizeof(arr2) / sizeof(int) ;
-  //将len设为数组
-  int len[2] = {len1 , len2 };//这里面包含的整数
-  //二维数组定义
-  int* arr[2] = {arr1 , arr2} ;//不再是整数，而是存的指针指向各个以为数组的首地址
-  //循环索引遍历
-  for(int i = 0 ; i < 2 ; i++)//记得确认i的范围
-  {
-      for(int j = 0 ; j < len[i] ; j++)
-      {
-          printf("%d " , arr[i][j]) ;
-      }
-      printf("\n") ;
-  }
+{
+    printf("method2\n") ;
+    return num1 + num2 ;
 }
 */
