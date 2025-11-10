@@ -1,122 +1,150 @@
-//C语言第14天（25/11/04）
+//C语言第15天（25/11/05）
 #include <stdio.h>
 
 int main(void) {
-///定义一个数组：
-    int arr1[3] = {1 , 2 , 3} ;
-    int arr2[3] = {1 , 2 , 6} ;
-//定义二维数组
-    int* arr[2] = {arr1 , arr2} ;
-//获取指针（重点）
-    int** p = arr ;
-//循环嵌套
-    for(int i = 0 ; i < 2 ; i++)
+    //1、键盘录入一个字符串
+    char str[100] ;
+    printf("请录入一个字符串\n") ;
+    scanf("%s" ,str) ;
+    printf("接收到的字符串为：%s\n" , str) ;
+    //2|遍历字符串中的每一个字符
+    char* p = str ;//数组指针，取首地址
+
+    while(1)
     {
-        for(int j = 0 ; j < 3 ; j++)
+        //利用指针获取字符串中的每一个字符，直到\0为止
+        char c = *p ;//取到具体的值，用一个新变量来接收
+        //判断当前字符是否为结束标记
+        if(c == '\0')
         {
-            printf("%d " , *(*p + j)) ;
+            break ;
         }
-        printf("\n") ;
+        printf("%c\n" , c) ;
         p++ ;
     }
 }
-
 
 /**
-* 一、利用指针遍历第一种格式的二维数组
-1、定义格式
-数据类型* 指针名 = arr ；
-二维时：int[5]* p = arr ;
-格式优化：int(* p) [5] = arr ;
-2、代码
+* 一、函数指针的练习
+定义加减乘除四个函数：分别对应的 1 2 3 4
+键盘录入三个数字
+
 #include <stdio.h>
 
+int add(int num1 , int num2) ;
+int substract(int num1 , int num2) ;
+int multiply(int num1 , int num2) ;
+int divide(int num1 , int num2) ;
 int main(void) {
-//定义一个二维数组
-    int arr[2][4] =
-            {
-                    {1,  2,  3,  4},
-                    {11, 22, 33, 44}
-            };
-//定义指针
-    int (*p)[4] = arr;//不用取地址符？
-//验证二维数组的步长（数据类型字符长度*一维中的数据个数）
-    printf("%p\n", p);
-    printf("%p\n", p + 1);
-//遍历数组
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 4; j++) {
-            printf("%d ", *(*p + j)); //*p是一维数组首地址
-        }
-        printf("\n");
-        p++;//二维指针移动（遍历下一个一维数组）
-    }
+
+//定义一个数组去装四个函数的指针
+//函数指针数组：
+    int (*arr[4]) (int , int) ={add , substract , multiply , divide} ;
+//键盘录入两个进行运算的数字
+    printf("请输入两个数字参与计算：") ;
+//定义这两个数字
+    int num1 ;
+    int num2 ;
+//用scanf_s看是否会报错
+    scanf_s("%d %d" , &num1 , &num2) ;
+//输入第三个数进行选择，调用函数
+    printf("请选择计算方式") ;
+    int choose ;
+    scanf_s("%d" , &choose) ;
+//难点：调用函数指针数组
+    int res = (arr[choose - 1])(num1 , num2) ;//运用数组的索引来获取，放入实参。返回结果是一个数，用一个变量接住
+    printf("%d" , res) ;
+
+
+}
+//写函数
+int add(int num1 , int num2)
+{
+    return num1 + num2 ;
 }
 
-二、用指针遍历第二种二维数组格式
-1、定义格式
-第二种定义格式的二维数组里面放的是内存地址：
-int** p = arr ;
-2、代码运行
-#include <stdio.h>
-
-int main(void) {
-///定义一个数组：
-    int arr1[3] = {1 , 2 , 3} ;
-    int arr2[3] = {1 , 2 , 6} ;
-//定义二维数组
-    int* arr[2] = {arr1 , arr2} ;
-//获取指针（重点）
-    int** p = arr ;
-//循环嵌套
-    for(int i = 0 ; i < 2 ; i++)
-    {
-        for(int j = 0 ; j < 3 ; j++)
-        {
-            printf("%d " , *(*p + j)) ;
-        }
-        printf("\n") ;
-        p++ ;
-    }
+int substract(int num1 , int num2)
+{
+    return num1 - num2 ;
 }
 
-三、数组指针和指针数组
-1、数组指针：指向数组的指针
-比如int* p = arr ;//步长为int 4
-int (*p)[5] = &arr ;//难道面对数组地址符是可写可不写吗，这是二维数组指针
-//类型是一维数组
-2、指针数组：存放指针的数组
-int *p[5] //存放int类型的指针
-int* arr[2] = {arr1 , arr2} ;
+int multiply(int num1 , int num2)
+{
+    return num1 * num2 ;
+}
+
+int divide(int num1 , int num2)
+{
+    return num1 / num2 ;
+} 
 
 */
 
 /**
-* 四、函数指针
- *
+* 二、字符串两种定义方式和底层细节
+*
+ * 1、字符数组获取字符串，\0表示结束
+ * 2、更常用的方式
+ * #include <stdio.h>
+
+
+int main(void) {
+    //1、字符数组+双引号的方式来定义
+    char str1[4] = "abc" ;
+    printf("%s\n" , str1) ;//字符串是用%s输出，而不是%c
+//需要注意的细节1：
+//表面上看格式是abc，实际底层格式为{'a' , 'b' , 'c' , '\0'} ;
+//细节二：
+//数组的长度可以不写。但若要写，至少需要留结束标记的位置（即 > 字符个数+1）
+//细节三：
+//字符串+双引号的方式定义字符串，内容是可以自己改变的
+str1[0] = 'Q' ;
+printf("%s\n" , str1) ;
+
+//2、利用指针+双引号的方式定义字符串
+    char* str2 = "abcd" ;
+    char* str3 = "abcd" ;
+    printf("%s\n" , str2) ;
+//需要注意的细节1：
+//表面上看格式是abcd，实际底层格式为{'a' , 'b' , 'c' , 'd' , '\0'} ;
+//细节二：
+//指针+双引号的格式，会把字符串放入只读常量区
+//特点：
+//只可读，内容不可更改
+//里面定义的字符串地址可复用
+    //str2[0] = 'Q' ;
+    //printf("%s\n" , str2) ;
+    printf("%p\n" , str2) ;
+    printf("%p\n" , str3) ;//共用地址
+
+}
+*/
+
+/**
+* 三、遍历字符串：
+ * 键盘录入一个字符串，遍历它
  *#include <stdio.h>
 
-void method1() ;
-int method2(int num1 , int num2) ;
 int main(void) {
-//难点在于函数指针定义格式
-//复制函数注释
-    void (* p1)() = method1 ;
-    int (* p2)(int , int) = method2 ;//只需要写出形参的类型
+    //1、键盘录入一个字符串
+    char str[100] ;
+    printf("请录入一个字符串\n") ;
+    scanf("%s" ,str) ;
+    printf("接收到的字符串为：%s\n" , str) ;
+    //2|遍历字符串中的每一个字符
+    char* p = str ;//数组指针，取首地址
 
-    //调用函数
-    p1() ;
-    int num = p2(12 , 120) ;//return的是一个数值，因此要用一个新的变量来接收
-    printf("%d" , num) ;
-}
-void method1()
-{
-    printf("method1\n") ;
-}
-int method2(int num1 , int num2)
-
-{
-    printf("method2\n") ;
-    return num1 + num2 ;
+    while(1)
+    {
+        //利用指针获取字符串中的每一个字符，直到\0为止
+        char c = *p ;//取到具体的值，用一个新变量来接收
+        //判断当前字符是否为结束标记
+        if(c == '\0')
+        {
+            break ;
+        }
+        printf("%c\n" , c) ;
+        p++ ;
+    }
 }
 */
