@@ -1,150 +1,128 @@
-//C语言第15天（25/11/05）
+//C语言第16天（25/11/10）
 #include <stdio.h>
+#include <string.h>
 
 int main(void) {
-    //1、键盘录入一个字符串
-    char str[100] ;
-    printf("请录入一个字符串\n") ;
-    scanf("%s" ,str) ;
-    printf("接收到的字符串为：%s\n" , str) ;
-    //2|遍历字符串中的每一个字符
-    char* p = str ;//数组指针，取首地址
+//以下用三种字符串定义方式
+char* str1 = "ahh" ;//用指针时不需要定义长度(只读)
+char str2[100] = "你aHh" ;
+char str3[3] = {'x' , 'i' , '\0'};//要留出\0的位置
 
-    while(1)
-    {
-        //利用指针获取字符串中的每一个字符，直到\0为止
-        char c = *p ;//取到具体的值，用一个新变量来接收
-        //判断当前字符是否为结束标记
-        if(c == '\0')
-        {
-            break ;
-        }
-        printf("%c\n" , c) ;
-        p++ ;
-    }
+//1、strlen计算长度函数：输出时不计算结束标记的长度
+//int len1 = strlen(str1) ;
+//int len2 = strlen(str2) ;
+//int len3 = strlen(str3) ;
+//
+//printf("%d\n" , len1) ;
+//printf("%d\n" , len2) ;//中文字符占三个字节 3 -- 6
+//printf("%d\n" , len3) ;
+
+//2、strcat:拼接（第二个字符串的内容复制粘贴到第一个字符串后面）
+//前提1：第一个字符串是可以被修改的，否则无法输出
+//前提2：第一个字符串的空间足以容纳下总长度
+//strcat(str2 , str3) ;
+//printf("%s\n" , str2) ;
+//printf("%s\n" , str3) ;
+
+//3、strcpy：拷贝（第二个字符串的内容复制后覆盖第一个字符串的内容）
+//前提1：第一个字符串是可以被修改的，否则无法输出
+//前提2：第一个字符串的空间足以容纳下总长度
+//    strcpy(str2 , str3) ;
+//    printf("%s\n" , str2) ;
+//    printf("%s\n" , str3) ;
+
+//4、strcmp：比较，完全一样则返回0 ，不一样返回任意非零数
+//int res = strcmp(str1 , str2) ;
+//printf("%d\n" , res) ;
+
+//5、strlwr：变小写，前提是可修改，而且无法改变中文
+//strlwr(str2) ;
+//printf("%s\n" , str2) ;
+
+//6、strupr：变大写
+strupr(str3) ;
+printf("%s" , str3) ;
 }
 
 /**
-* 一、函数指针的练习
-定义加减乘除四个函数：分别对应的 1 2 3 4
-键盘录入三个数字
-
-#include <stdio.h>
-
-int add(int num1 , int num2) ;
-int substract(int num1 , int num2) ;
-int multiply(int num1 , int num2) ;
-int divide(int num1 , int num2) ;
-int main(void) {
-
-//定义一个数组去装四个函数的指针
-//函数指针数组：
-    int (*arr[4]) (int , int) ={add , substract , multiply , divide} ;
-//键盘录入两个进行运算的数字
-    printf("请输入两个数字参与计算：") ;
-//定义这两个数字
-    int num1 ;
-    int num2 ;
-//用scanf_s看是否会报错
-    scanf_s("%d %d" , &num1 , &num2) ;
-//输入第三个数进行选择，调用函数
-    printf("请选择计算方式") ;
-    int choose ;
-    scanf_s("%d" , &choose) ;
-//难点：调用函数指针数组
-    int res = (arr[choose - 1])(num1 , num2) ;//运用数组的索引来获取，放入实参。返回结果是一个数，用一个变量接住
-    printf("%d" , res) ;
-
-
-}
-//写函数
-int add(int num1 , int num2)
-{
-    return num1 + num2 ;
-}
-
-int substract(int num1 , int num2)
-{
-    return num1 - num2 ;
-}
-
-int multiply(int num1 , int num2)
-{
-    return num1 * num2 ;
-}
-
-int divide(int num1 , int num2)
-{
-    return num1 / num2 ;
-} 
-
-*/
-
-/**
-* 二、字符串两种定义方式和底层细节
-*
- * 1、字符数组获取字符串，\0表示结束
- * 2、更常用的方式
- * #include <stdio.h>
-
-
-int main(void) {
-    //1、字符数组+双引号的方式来定义
-    char str1[4] = "abc" ;
-    printf("%s\n" , str1) ;//字符串是用%s输出，而不是%c
-//需要注意的细节1：
-//表面上看格式是abc，实际底层格式为{'a' , 'b' , 'c' , '\0'} ;
-//细节二：
-//数组的长度可以不写。但若要写，至少需要留结束标记的位置（即 > 字符个数+1）
-//细节三：
-//字符串+双引号的方式定义字符串，内容是可以自己改变的
-str1[0] = 'Q' ;
-printf("%s\n" , str1) ;
-
-//2、利用指针+双引号的方式定义字符串
-    char* str2 = "abcd" ;
-    char* str3 = "abcd" ;
-    printf("%s\n" , str2) ;
-//需要注意的细节1：
-//表面上看格式是abcd，实际底层格式为{'a' , 'b' , 'c' , 'd' , '\0'} ;
-//细节二：
-//指针+双引号的格式，会把字符串放入只读常量区
-//特点：
-//只可读，内容不可更改
-//里面定义的字符串地址可复用
-    //str2[0] = 'Q' ;
-    //printf("%s\n" , str2) ;
-    printf("%p\n" , str2) ;
-    printf("%p\n" , str3) ;//共用地址
-
-}
-*/
-
-/**
-* 三、遍历字符串：
- * 键盘录入一个字符串，遍历它
+* 一、字符串数组：遍历多个字符串
+ * 定义一个数组存储五个学生的名字并遍历
  *#include <stdio.h>
 
 int main(void) {
-    //1、键盘录入一个字符串
-    char str[100] ;
-    printf("请录入一个字符串\n") ;
-    scanf("%s" ,str) ;
-    printf("接收到的字符串为：%s\n" , str) ;
-    //2|遍历字符串中的每一个字符
-    char* p = str ;//数组指针，取首地址
-
-    while(1)
-    {
-        //利用指针获取字符串中的每一个字符，直到\0为止
-        char c = *p ;//取到具体的值，用一个新变量来接收
-        //判断当前字符是否为结束标记
-        if(c == '\0')
+    //1、定义一个二维数组，存储多个名字
+    //不知道具体字符串长度，只要能保证不超出范围就行（留出\0的位置）
+char strArr[2][100] =
         {
-            break ;
-        }
-        printf("%c\n" , c) ;
-        p++ ;
-    }
+        "tanlinjie" ,
+        "tangxiaoqi"
+        };
+//2、遍历数组（利用指针）
+for(int i = 0 ; i < 2 ; i++)
+{
+    char* str = strArr[i] ;//赋值给一个指针
+    printf("%s\n" , str) ;//%s和%d的使用格式不同，%s不需要解引用
 }
+//2、方式2：定义一个数组指针
+char* strArr1[2] =
+        {
+                "tanlinjie" ,
+                "tangxiaoqi"
+        };
+for(int i = 0 ; i < 2 ; i++)//指针若是超出范围则不显示数据，但若是字符串数组则可正常输出
+{
+    char* str = strArr1[i] ;
+    printf("%s\n" , str) ;
+    //不同的循环中，相同的变量名可以反复使用
+}
+}
+*/
+
+/**
+* 二、字符（string）串常见函数（6个）
+ *#include <stdio.h>
+#include <string.h>
+
+int main(void) {
+//以下用三种字符串定义方式
+char* str1 = "ahh" ;//用指针时不需要定义长度(只读)
+char str2[100] = "你aHh" ;
+char str3[3] = {'x' , 'i' , '\0'};//要留出\0的位置
+
+//1、strlen计算长度函数：输出时不计算结束标记的长度
+//int len1 = strlen(str1) ;
+//int len2 = strlen(str2) ;
+//int len3 = strlen(str3) ;
+//
+//printf("%d\n" , len1) ;
+//printf("%d\n" , len2) ;//中文字符占三个字节 3 -- 6
+//printf("%d\n" , len3) ;
+
+//2、strcat:拼接（第二个字符串的内容复制粘贴到第一个字符串后面）
+//前提1：第一个字符串是可以被修改的，否则无法输出
+//前提2：第一个字符串的空间足以容纳下总长度
+//strcat(str2 , str3) ;
+//printf("%s\n" , str2) ;
+//printf("%s\n" , str3) ;
+
+//3、strcpy：拷贝（第二个字符串的内容复制后覆盖第一个字符串的内容）
+//前提1：第一个字符串是可以被修改的，否则无法输出
+//前提2：第一个字符串的空间足以容纳下总长度
+//    strcpy(str2 , str3) ;
+//    printf("%s\n" , str2) ;
+//    printf("%s\n" , str3) ;
+
+//4、strcmp：比较，完全一样则返回0 ，不一样返回任意非零数
+//int res = strcmp(str1 , str2) ;
+//printf("%d\n" , res) ;
+
+//5、strlwr：变小写，前提是可修改，而且无法改变中文
+//strlwr(str2) ;
+//printf("%s\n" , str2) ;
+
+//6、strupr：变大写
+strupr(str3) ;
+printf("%s" , str3) ;
+}
+ *
 */
