@@ -1,156 +1,172 @@
-//C语言第18天（25/11/12）
+//C语言第19天（25/11/13）
 #include <stdio.h>
 #include <string.h>
 
-typedef struct //可省略cha，必须加typedef
-{
-    char name[100] ;
-    int blood ;
-}C;
-int main(void) {
-    C nanuo = {"纳诺" , 10000} ;
-    C nanai = {"纳奈" , 1};
-    //定义数组
-    C arr[2] = {nanuo , nanai};//定义数组也不需要写struct
-    //遍历
-    for(int i = 0 ; i < 2 ; i++ )
-    {
-        C temp = arr[i] ;//这里前面写别名就代表了他的类型
-        printf("名字是%s , 法力值为%d\n" , temp.name , temp.blood) ;
-    }
-}
+struct Message
+        {
+ char phone[12] ;//十一位多加一位
+ char mail[100] ;
+};
 
-/**
-* 一、字符串实战：统计字符次数
- *统计大写、小写、数字的个数
- *
- *#include <stdio.h>
-#include <string.h>
-
-int main(void) {
-//1、键盘录入字符串
-printf("请输入一个字符串：") ;
-    fflush(stdout) ;
-    char str[100] ;
-    scanf("%s" , str) ;
-//2、计数器：count++
-//遍历字符串
-int bigcount = 0 ;
-int smallcount = 0 ;
-int numbercount = 0 ;
-for(int i = 0 ; i< strlen(str) ; i++)//这里长度未知，直接用字符串函数
-{
-    char c = str[i] ;//请勿忘记用一个变量读取遍历
-    if(c >= 'a' && c <= 'z')
-    {
-        smallcount++ ;
-    }
-    else if(c >= 'A' && c <= 'Z')
-    {
-        bigcount++ ;
-    }
-    else if(c >= '0' && c <= '9')//这里不可只用数字，此刻数字也是字符
-    {
-        numbercount++ ;
-    }
-}
-printf("big%d\n" , bigcount) ;
-printf("small%d\n" , smallcount) ;
-printf("number%d\n" , numbercount) ;
-}
-*/
-
-/**
-* 二、结构体！：自定义的数据类型，一批数据组合的整体
- * 1、格式：
- * struct 结构体名字
- * {
- * 成员1 ；//里面可包含任何类型
- * 成员2 ；
- * }
- *
- * 2、小细节：
- * 可写在main函数里面（局部），也可以写在外面（全局位置）
- *
-#include <stdio.h>
-#include <string.h>
-
-struct Mylover
+struct student
 {
     char name[100] ;
     int age ;
-    char gender ;
     double height ;
+    struct Message msg ;//取名字直接在这里取
 };
-int main(void) {
-    //使用结构体
-    //定义一个变量
-    struct Mylover qiqi ;//记得要自己取一个名字
-    strcpy(qiqi.name , "qiqi") ;//.是一个指向，指向结构体中的具体某一成员
-    qiqi.age = 21 ;
-    qiqi.gender ='F' ;//字符是不可以打印出中文的
-    qiqi.height =1.63 ;
 
-    printf("名字%s\n" , qiqi.name) ;
-    printf("年龄%d\n" , qiqi.age) ;
-    printf("性别%c\n" , qiqi.gender) ;
-    printf("身高%lf\n" , qiqi.height) ;
+
+int main(void) {
+    //1、定义一个学生
+    struct  student stu1 ;
+    //2、赋值
+    strcpy(stu1.name , "zhangsan") ;
+    stu1.age = 19 ;
+    stu1.height = 1.48 ;
+    //重点，给嵌套结构体赋值(逐层解开)
+    strcpy(stu1.msg.phone , "13112345678") ;
+    strcpy(stu1.msg.mail , "13112345678@qq.com") ;
+    printf("以下是该同学的一些信息：\n") ;
+    printf("姓名为：%s\n" , stu1.name) ;
+    printf("年龄为：%d\n", stu1.age) ;
+    printf("身高为：%f\n" , stu1.height) ;
+    printf("姓名为：%s\n" , stu1.msg.phone ) ;
+    printf("姓名为：%s\n" , stu1.msg.mail) ;
+
+    //简便方法：一次性赋值
+    struct  student stu2 = {"zhangsan" , 43 , 1.49 , {"13212345679" , "123@qq.com"}};
+    //嵌套的一块再加一个大括号，其中非字符串类型不用加引号
+    printf("以下是该同学的一些信息：\n") ;
+    printf("姓名为：%s\n" , stu2.name) ;
+    printf("年龄为：%d\n", stu2.age) ;
+    printf("身高为：%f\n" , stu2.height) ;
+    printf("姓名为：%s\n" , stu2.msg.phone ) ;
+    printf("姓名为：%s\n" , stu2.msg.mail) ;
+
 
 }
-*/
+
+
 
 /**
-* 一、结构体练习1：
- * 定义一个学生的结构体
- * 学生的基础信息
- * 三个学生放入数组，遍历数组
- *
- *
-#include <stdio.h>
-#include <string.h>
-
-struct Student
-{
-    char name[100] ;
-    int age ;
-};
-int main(void) {
-    //定义三个学生并赋值
-    struct Student stu1 = { "zhangsan" ,21} ;
-    struct Student stu2 = { "lisi" ,22} ;
-    struct Student stu3 = { "nanuo" ,25} ;
-//2、三个学生放入数组
-struct Student stuArr[3] = {stu1 , stu2 , stu3};//类型为结构体
-//3、遍历获取
-for(int i = 0 ; i < 3 ; i++) {
-    //用一个变量来接收（不知道用啥）
-    struct Student temp = stuArr[i];//跟数组内的类型一样，stu是结构体
-    printf("学生的名字%s , 学生的年龄%d\n", temp.name, temp.age);
-}
-}
-*/
-
-/**
-* 三、起别名，方便后续调用的方便性（甚至不用写struct）
+* 一、结构体作为函数的参数：函数中可传递结构体
+ * 1、传递数据
+ * 2、传递地址
  *
  * #include <stdio.h>
 #include <string.h>
 
-typedef struct //可省略cha，必须加typedef
+typedef struct
 {
     char name[100] ;
-    int blood ;
-}C;
+    int age ;
+}S;
+
+void method1(S st) ;//函数title放在结构体下方，否则识别不到
+void method2(S* p) ;
+
 int main(void) {
-   C nanuo = {"纳诺" , 10000} ;
-   C nanai = {"纳奈" , 1};
-   //定义数组
-   C arr[2] = {nanuo , nanai};//定义数组也不需要写struct
-   //遍历
-   for(int i = 0 ; i < 2 ; i++ )
-   {
-     C temp = arr[i] ;//这里前面写别名就代表了他的类型
-     printf("名字是%s , 法力值为%d\n" , temp.name , temp.blood) ;
-   }
+    //1、定义一个学生
+    S stu ;
+    //2、给学生赋初始值
+    strcpy(stu.name , "aaa") ;//给字符串赋值要用字符串函数
+    stu.age = 0 ;//定义后直接调用就好了，不必引用结构体名称
+    //3、打印出当前的学生信息
+    printf("学生的姓名为：%s\n" , stu.name) ;
+    printf("学生的年龄为：%d\n" , stu.age) ;
+    //4、调用函数（尝试直接改变结构体内的值）
+    method1(stu) ;//把名称给他就行
+    //5、查看修改后的信息
+    printf("修改后学生姓名：%s\n" , stu.name) ;
+    printf("修改后学生年龄：%d\n" , stu.age) ;
+
+    //将地址传递过去
+    method2(&stu) ;//仍然不需要用S别名
+    printf("修改后学生姓名：%s\n" , stu.name) ;
+    printf("修改后学生年龄：%d\n" , stu.age) ;
+
+}
+//直接修改值会发现并未修改成功
+//因为method1相当于定义了一个新变量，改变的是st的值，而不是stu
+void method1(S st)//结构体名称+自定义名称
+{
+    printf("接收到的学生姓名为：%s\n" , st.name ) ;
+    printf("接收到的学生年龄为：%d\n" , st.age ) ;
+    //开始做修改(键盘)
+    printf("请输入修改后的学生姓名：") ;
+    fflush(stdout) ;
+    scanf("%s" , st.name) ;//name本身是数组，当参与运算时，直接退化为指向首位的指针
+    printf("请输入修改后的学生年龄：") ;
+    fflush(stdout) ;
+    scanf("%d" , &(st.age)) ;//这里的黄色警告不必担心
+}
+//定义一个指针
+void method2(S* p)
+{
+    printf("接收到的学生姓名为：%s\n" , (*p).name ) ;//要将结构体的地址解引用
+    printf("接收到的学生年龄为：%d\n" , (*p).age ) ;
+    //开始做修改(键盘)
+    printf("请输入修改后的学生姓名：") ;
+    fflush(stdout) ;
+    scanf("%s" , (*p).name) ;
+    printf("请输入修改后的学生年龄：") ;
+    fflush(stdout) ;
+    scanf("%d" , &((*p).age)) ;
+
+}
+*/
+
+/**
+* 二、结构体嵌套
+ * 成员包含结构体
+ * 联系方式包括了手机号和电子邮箱
+ *
+ * include <stdio.h>
+#include <string.h>
+
+struct Message
+        {
+ char phone[12] ;//十一位多加一位
+ char mail[100] ;
+};
+
+struct student
+{
+    char name[100] ;
+    int age ;
+    double height ;
+    struct Message msg ;//取名字直接在这里取
+};
+
+
+int main(void) {
+    //1、定义一个学生
+    struct  student stu1 ;
+    //2、赋值
+    strcpy(stu1.name , "zhangsan") ;
+    stu1.age = 19 ;
+    stu1.height = 1.48 ;
+    //重点，给嵌套结构体赋值(逐层解开)
+    strcpy(stu1.msg.phone , "13112345678") ;
+    strcpy(stu1.msg.mail , "13112345678@qq.com") ;
+    printf("以下是该同学的一些信息：\n") ;
+    printf("姓名为：%s\n" , stu1.name) ;
+    printf("年龄为：%d\n", stu1.age) ;
+    printf("身高为：%f\n" , stu1.height) ;
+    printf("姓名为：%s\n" , stu1.msg.phone ) ;
+    printf("姓名为：%s\n" , stu1.msg.mail) ;
+
+    //简便方法：一次性赋值
+    struct  student stu2 = {"zhangsan" , 43 , 1.49 , {"13212345679" , "123@qq.com"}};
+    //嵌套的一块再加一个大括号，其中非字符串类型不用加引号
+    printf("以下是该同学的一些信息：\n") ;
+    printf("姓名为：%s\n" , stu2.name) ;
+    printf("年龄为：%d\n", stu2.age) ;
+    printf("身高为：%f\n" , stu2.height) ;
+    printf("姓名为：%s\n" , stu2.msg.phone ) ;
+    printf("姓名为：%s\n" , stu2.msg.mail) ;
+
+
 }
 */
