@@ -1,130 +1,94 @@
-//C语言第20天（25/11/15）
+//C语言第21天（25/11/16）
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 
-struct spot
+union MoneyType
 {
-   int a ;//(4)0,1,2,3
-   char b ;//(1)4
-   char c ;//(1)5 (6,7)
-   double d ;//(8) 8
-   //0,1,2,3
-   //4,5,6,7
-   //此时并未对齐
-   //8，（9，10，11）
-   //（12，13，14，15）。为了能被最大的数据类型整除
-   //共16位
+   int moneyi ;
+   double moneyd ;//最大字节8
+   char moneystr[100] ;//这里的最大字节不是100，他是char，字节为1
 };
 
 int main(void) {
-    //内存地址能被数据类型整除（数组的话就是首地址）
-    //一、非结构体的数据类型验证地址是否为其整数倍
-    int a ;
-    printf("%d\n" , &a) ;//%p是16进制进行打印，%d是十进制进行打印
-    //二、结构体验证它的字节计算方式
-    //定义一个结构体：
-    struct spot n ;
-    printf("%zu\n" , sizeof(n)) ;
-}
+    union MoneyType money ;
+    //各成员的内存地址
+    printf("%p\n" , &(money.moneyi)) ;
+    printf("%p\n" , &(money.moneyd)) ;
+    printf("%p\n" , &(money.moneystr)) ;
 
+    //各字节长度和总字节长度（遵循内存对齐）
+    printf("%zu\n" , sizeof(money.moneyi)) ;
+    printf("%zu\n" , sizeof(money.moneyd)) ;
+    printf("%zu\n" , sizeof(money.moneystr)) ;
+    printf("%zu\n" , sizeof(money)) ;
+
+    //被覆盖的情况
+    money.moneyi = 999 ;
+    strcpy(money.moneystr , "10万") ;
+    printf("%s\n" , money.moneystr) ;
+    printf("%d\n" , money.moneyi) ;//此时会获取一个完全未知的数字
+
+}
 
 
 /**
-* 一、结构体综合练习：投票选举
- * 共ABCD个景点
- *1、学生投票，用随机数模拟
- * 2、如果多景点投票数量一致，A优先B ， B优先于C
+ * 一、共同体：一种数据可能有多种类型
+ * 钱的数目：整数，小数类型
+ * 1、基本格式：（与结构体类似）
+ * union Money
+ * {
+ * int a ;
+ * char b ;
+ * };
  *
  * #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <string.h>
 
 
-struct spot
+union MoneyType
 {
-    char name[100] ;
-    int count ;
+   int moneyi ;
+   double moneyd ;
+   char moneystr[100] ;
 };
 
 int main(void) {
-    //1、定义四个景点（结构体数组：相当于嵌套，可以同时容纳多个不同类型的数据）
-    struct spot arr[4] = {{'A' , 0} , {'B', 0} ,{'C' , 0} ,{'D' , 0} };
-    //可同时赋值，注意字符串赋值一定要加单引号
+    union MoneyType money ;
+    //每次只能赋一个值
 
-    //2、80个学生进行随机投票（随机数、循环）
-    srand(time(NULL)) ;
-    //这里的srand为什么不写在循环内：因为rand已经写在循环内了，取多少个rand就会有多少次srand
-    for(int i = 0 ; i <= 80 ; i++)
-    {
-       //将rand变换为结构体数组的索引，需要一个新的变量
-       int number = rand() % 4 ;//这里只能取0~4了
-       //对应索引中的count就自动++
-       arr[number].count++ ;
+    //money.moneyi = 9999 ;
+    strcpy(money.moneystr , "10万元") ;
+    //打印类型和赋值有关(每次打印一个)
 
-    }
-    //3、比较出这四个景点票数的最大值
-    //易忽略点：先设一个最大值，一般是数组中的第一个数据
-    int max = arr[0].count ;
-    for(int i = 1 ; i < 4 ; i++)
-    {
-        if(arr[i].count > max)//注意这里比较的是count
-        {
-            max = arr[i].count ;
-        }
-    }
+    //printf("%d\n" , money.moneyi) ;
+    printf("%s\n" , money.moneystr) ;
 
-    //4、将最大值对应的景点找出来（有相同值时，只取第一个值）
-    //遍历数组
-    for(int i = 0 ; i <4 ; i++)
-    {
-        if(arr[i].count == max)
-        {
-            printf("最受欢迎的景点为：%s , 总计票数： %d\n" , arr[i].name , arr[i].count) ;
-        }
-    }
-//把所有数据遍历出来检查：
-    for(int i = 0 ; i <4 ; i++)
-    {
-        printf("%s ,%d\n" , arr[i].name , arr[i].count) ;
-    }
 
 }
-*/
+ */
 
 /**
-* 二、结构体内存对齐（结构体的内存分布）
- * 1、只能放在自己类型整数倍的内存地址上，对于任何数据类型都是如此
- *2、最后一个补位：结构体的总大小，是最大类型的整数倍
+ * 二、共用体的特点：
+ * 1、共用体=联合体= 共同体
+ * 2、所有的变量都是用同一个内存空间：但结构体的成员空间都是互相独立的
+ * 3、共用体所占内存大小=最大成员的长度（也有内存对齐）
+ * 4、每次只能给一个变量赋值，第二次赋值会覆盖第一次的数据
  *
- * #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+ */
 
-
-struct spot
-{
-   int a ;//(4)0,1,2,3
-   char b ;//(1)4
-   char c ;//(1)5 (6,7)
-   double d ;//(8) 8
-   //0,1,2,3
-   //4,5,6,7
-   //此时并未对齐
-   //8，（9，10，11）
-   //（12，13，14，15）。为了能被最大的数据类型整除
-   //共16位
-};
-
-int main(void) {
-    //内存地址能被数据类型整除（数组的话就是首地址）
-    //一、非结构体的数据类型验证地址是否为其整数倍
-    int a ;
-    printf("%d\n" , &a) ;//%p是16进制进行打印，%d是十进制进行打印
-    //二、结构体验证它的字节计算方式
-    //定义一个结构体：
-    struct spot n ;
-    printf("%zu\n" , sizeof(n)) ;
-}
-*/
+/**
+ * 三、结构体和共用体的区别：
+ * 1、代码使用区别：
+ * 结构体：一个事物代表多个属性
+ * 共用体：一个属性有多种类型
+ * 2、存储方式：
+ * 各存各
+ * 存在一起，多个会覆盖
+ * 3、内存占用：
+ * 各个变量总和（受内存对齐影响）
+ * 最大类型的字节（受内存对齐影响）
+ *
+ */
