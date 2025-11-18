@@ -1,94 +1,193 @@
-//C语言第21天（25/11/16）
+//C语言第22天（25/11/18）
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
 
-
-union MoneyType
+void method(int* p , int size) ;
+int main(void) {
+    int *p = malloc(10 * sizeof(int));
+    int size = 10;//自行定义一个size
+    printf("%d\n", sizeof(p));//仅仅是指针的大小，而不是malloc空间的大小（包含多少个某类型的数据）
+    free(p) ;
+    //因此我们要学会两种赋值方式：利用循环
+    for (int i = 0; i < 10; i++)//i是不能等于10的，索引超出，会导致程序空白
+    {
+        //方式一：解引用后赋值（注意p的指向要改变，增加步长）
+        //*(p + i) = 1 + i ;
+        //方式二：利用数组直接取索引赋值
+        p[i] = 1 + i;
+    }
+    method(p , size) ;//这里的p不用取地址符，p本来就是指向地址的
+    free(p) ;
+}
+void method(int* p , int size)
 {
-   int moneyi ;
-   double moneyd ;//最大字节8
-   char moneystr[100] ;//这里的最大字节不是100，他是char，字节为1
-};
+    for(int i = 0 ; i < size ; i++)
+    {
+        printf("%d  " , p[i] ) ;
+    }
+}
+/**
+ * 一、动态内存分配：可任意请求地址
+ * 1、需要掌握以下四个函数：均放在<stdlib.h>中
+ * malloc（memory allocation） 作用：申请空间（连续空间）
+ * realloc（re-allocation） 作用：修改空间大小
+ *calloc（contiguous allocation） 作用：申请空间+数据初始化
+ *free 作用：释放空间（以防申请空间太多，被挤爆）
+ *
+ * 2、函数1的运用：malloc
+ *
+#include <stdio.h>
+#include <stdlib.h>
 
 int main(void) {
-    union MoneyType money ;
-    //各成员的内存地址
-    printf("%p\n" , &(money.moneyi)) ;
-    printf("%p\n" , &(money.moneyd)) ;
-    printf("%p\n" , &(money.moneystr)) ;
+    //要求：申请一片空间。放入10个int类型
+    //malloc中写入的是字符的长度
+    int* p = malloc(10 * sizeof(int)) ;//对于64位来说，int占4位，可写为malloc（400）；但这不具有通用性
+    //此时输出地址，会指向首地址
+    printf("%p\n" , p) ;
+    //此时仅有内存，而没有具体的数值
+    printf("%d\n" , *p) ;//会随机输出一个数字
 
-    //各字节长度和总字节长度（遵循内存对齐）
-    printf("%zu\n" , sizeof(money.moneyi)) ;
-    printf("%zu\n" , sizeof(money.moneyd)) ;
-    printf("%zu\n" , sizeof(money.moneystr)) ;
-    printf("%zu\n" , sizeof(money)) ;
-
-    //被覆盖的情况
-    money.moneyi = 999 ;
-    strcpy(money.moneystr , "10万") ;
-    printf("%s\n" , money.moneystr) ;
-    printf("%d\n" , money.moneyi) ;//此时会获取一个完全未知的数字
+    //因此我们要学会两种赋值方式：利用循环
+    for(int i = 0 ; i < 10 ; i++)//i是不能等于10的，索引超出，会导致程序空白
+    {
+        //方式一：解引用后赋值（注意p的指向要改变，增加步长）
+        *(p + i) = 1 + i ;
+        //方式二：利用数组直接取索引赋值
+        //p[i] = 1 + i ;
+    }
+    //循环遍历出来
+    for(int i = 0 ; i < 10 ; i++)
+    {
+        printf("%d  " , *(p + i)) ;
+        //printf("%d  " , p[i]) ;
+    }
 
 }
+ *3、calloc函数（不常用）
+ *
+#include <stdio.h>
+#include <stdlib.h>
 
-
-/**
- * 一、共同体：一种数据可能有多种类型
- * 钱的数目：整数，小数类型
- * 1、基本格式：（与结构体类似）
- * union Money
- * {
- * int a ;
- * char b ;
- * };
+int main(void) {
+    //要求：申请一片空间。放入10个int类型
+    //calloc中写入的是字符的数目以及类型长度
+    int* p = calloc(10  ,sizeof(int)) ;//对于64位来说，int占4位，可写为malloc（400）；但这不具有通用性
+    //此时输出地址，会指向首地址
+    printf("%p\n" , p) ;
+    //数据会初始化
+    printf("%d\n" , *p) ;
+ }
+ *4、realloc（不常用）：
  *
  * #include <stdio.h>
-#include <string.h>
-
-
-union MoneyType
-{
-   int moneyi ;
-   double moneyd ;
-   char moneystr[100] ;
-};
+#include <stdlib.h>
 
 int main(void) {
-    union MoneyType money ;
-    //每次只能赋一个值
+    //要求：申请一片空间。放入10个int类型
+    //calloc中写入的是字符的数目以及类型长度
+    int* p = malloc(10 * sizeof(int)) ;//对于64位来说，int占4位，可写为malloc（400）；但这不具有通用性
+    //此时输出地址，会指向首地址
+    printf("%p\n" , p) ;
+    //数据会初始化
+    printf("%d\n" , *p) ;
 
-    //money.moneyi = 9999 ;
-    strcpy(money.moneystr , "10万元") ;
-    //打印类型和赋值有关(每次打印一个)
+    //因此我们要学会两种赋值方式：利用循环
+    for(int i = 0 ; i < 10 ; i++)//i是不能等于10的，索引超出，会导致程序空白
+    {
+        //方式一：解引用后赋值（注意p的指向要改变，增加步长）
+        //*(p + i) = 1 + i ;
+        //方式二：利用数组直接取索引赋值
+        p[i] = 1 + i ;
+    }
+    //利用realloc修改空间大小
+    int* pp = realloc(p , 20 * sizeof(int)) ;
+    //循环遍历出来
+    for(int i = 0 ; i < 20 ; i++)//前十个已赋值，后十个随机
+    {
+        //printf("%d  " , *(p + i)) ;
+        printf("%d  " , p[i]) ;
+    }
 
-    //printf("%d\n" , money.moneyi) ;
-    printf("%s\n" , money.moneystr) ;
+}
+ *5、free：释放空间（重要）
+ *
+ *#include <stdio.h>
+#include <stdlib.h>
 
+int main(void) {
+    //要求：申请一片空间。放入10个int类型
+    //calloc中写入的是字符的数目以及类型长度
+    int* p = malloc(10 * sizeof(int)) ;//对于64位来说，int占4位，可写为malloc（400）；但这不具有通用性
+    //此时输出地址，会指向首地址
+    printf("%p\n" , p) ;
+    //数据会初始化
+    printf("%d\n" , *p) ;
 
+    //因此我们要学会两种赋值方式：利用循环
+    for(int i = 0 ; i < 10 ; i++)//i是不能等于10的，索引超出，会导致程序空白
+    {
+        //方式一：解引用后赋值（注意p的指向要改变，增加步长）
+        //*(p + i) = 1 + i ;
+        //方式二：利用数组直接取索引赋值
+        p[i] = 1 + i ;
+    }
+    //利用realloc修改空间大小
+    int* pp = realloc(p , 20 * sizeof(int)) ;
+    //循环遍历出来
+    for(int i = 0 ; i < 20 ; i++)//前十个已赋值，后十个随机
+    {
+        //printf("%d  " , *(p + i)) ;
+        printf("%d  " , p[i]) ;
+    }
+//free释放空间，因为是空间，所以用指针来赋值
+free(pp) ;//无任何显示，但实际上已释放
 }
  */
 
 /**
- * 二、共用体的特点：
- * 1、共用体=联合体= 共同体
- * 2、所有的变量都是用同一个内存空间：但结构体的成员空间都是互相独立的
- * 3、共用体所占内存大小=最大成员的长度（也有内存对齐）
- * 4、每次只能给一个变量赋值，第二次赋值会覆盖第一次的数据
+ * 二、动态内存分配的函数细节：
+ * 1、malloc创建的空间单位是字节
+ * 2、malloc的返回值是一个void类型的指针，他没有步长的概念，需要强转
+ * viod类型保证了函数的通用性
+ * void* p = malloc(100) ;
+ * //变为
+ * int* p = malloc(100) ;
+ * 3、malloc返回的仅仅是首地址，没有总大小，可以额外定义一个变量记录大小
  *
- */
+#include <stdio.h>
+#include <stdlib.h>
 
-/**
- * 三、结构体和共用体的区别：
- * 1、代码使用区别：
- * 结构体：一个事物代表多个属性
- * 共用体：一个属性有多种类型
- * 2、存储方式：
- * 各存各
- * 存在一起，多个会覆盖
- * 3、内存占用：
- * 各个变量总和（受内存对齐影响）
- * 最大类型的字节（受内存对齐影响）
+
+void method(int* p , int size) ;
+int main(void) {
+    int *p = malloc(10 * sizeof(int));
+    int size = 10;//自行定义一个size
+    printf("%d\n", sizeof(p));//仅仅是指针的大小，而不是malloc空间的大小（包含多少个某类型的数据）
+
+    //因此我们要学会两种赋值方式：利用循环
+    for (int i = 0; i < 10; i++)//i是不能等于10的，索引超出，会导致程序空白
+    {
+        //方式一：解引用后赋值（注意p的指向要改变，增加步长）
+        //*(p + i) = 1 + i ;
+        //方式二：利用数组直接取索引赋值
+        p[i] = 1 + i;
+    }
+    method(p , size) ;//这里的p不用取地址符，p本来就是指向地址的
+}
+void method(int* p , int size)
+{
+    for(int i = 0 ; i < size ; i++)
+    {
+        printf("%d  " , p[i] ) ;
+    }
+}
  *
+ * 4、malloc申请的空间不会自动消失，如果不能释放，会导致内存泄漏（内存满了）
+ *
+ * 5、malloc申请的空间过多，会产生虚拟内存（申请成功返回首地址，失败返回NULL）
+ *
+ * 6、此时仅有内存，而没有具体的数值。因此要学会赋值的两种方式
  */
